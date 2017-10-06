@@ -1,0 +1,44 @@
+Tables:
+  - customers
+    * id
+    * name
+    * funds
+.      + .create(name, start_funds)
+.      + .read(whatever)
+.      + .update
+.      + .delete
+.      + .films - search tickets for film_id
+.      + .number_of_tickets - sum(select * from tickets where customer_id = id)
+  - films
+    * id
+    * title
+    * price
+.      + .create(title, price)
+.      + .read(whatever)
+.      + .update(price)
+.      + .delete
+.      + .customers - select customers.* from tickets inner join customers
+        where film_id = id
+.      + .number_of_customers - count(select * from tickets where film_id = id)
+.      + .most_popular_time - select * from screenings where id =
+        high_count(select screening_id from tickets where film_id = id)
+  - tickets (customer_films join table)
+    * id
+    * customer_id
+    * film_id
+    * screening_id
+.      + .create(c_id, s_id) - decrease customer funds -= film price,
+        check count(select * from tickets where screening_id = s_id)
+        < screening.capacity
+.      + .read - join customer, screening and film to give info
+.      + .update(customer or screening)
+.      + .delete/use
+  - screenings (1 -> many with films)
+    * id
+    * film_id
+    * showtime
+    * capacity - has maximum constraint
+.      + .create(film_id, time)
+.      + .read - join film info with time and capacity
+.      + .update(new_time)
+.      + .delete
